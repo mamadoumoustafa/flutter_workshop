@@ -11,80 +11,76 @@ Widget _buildImage() => Hero(
       ),
     );
 
-class MainScreen extends StatelessWidget {
+class ScreenArguments {
+  final String title;
+  final String body;
+
+  ScreenArguments(this.title, this.body);
+}
+
+class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main screen'),
+        title: Text('First screen'),
       ),
-      body: GestureDetector(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return DetailScreen();
-          }));
-        },
-        child: _buildImage(),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Launch screen'),
+          onPressed: () {
+            Navigator.pushNamed(context, '/second',
+                arguments: ScreenArguments('Extract arguments screen',
+                    'This message is extracted from the build method'));
+          },
+        ),
       ),
     );
   }
 }
 
-class DetailScreen extends StatelessWidget {
+class SecondScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ScreenArguments screenArguments =
+        ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Center(
-          child: _buildImage(),
-        ),
+      appBar: AppBar(
+        title: Text(screenArguments.title),
+      ),
+      body: Center(
+        child: Text(screenArguments.body),
       ),
     );
+
+/*     return Scaffold(
+      appBar: AppBar(
+        title: Text('Second screen'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Go back !'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    ); */
   }
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  Widget _buildCard() => SizedBox(
-        height: 210,
-        child: Card(
-          child: Column(
-            children: [
-              ListTile(
-                title: Text('Bourbon street',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text('New orlean, Louisiane'),
-                leading: Icon(Icons.streetview_outlined, color: Colors.brown),
-              ),
-              Divider(),
-              ListTile(
-                title: Text('780-048-698-369'),
-                leading: Icon(
-                  Icons.phone,
-                  color: Colors.brown,
-                ),
-              ),
-              ListTile(
-                title: Text('marcelus@gmail.com'),
-                leading: Icon(
-                  Icons.mail,
-                  color: Colors.brown,
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Layout Demo',
-        home: Scaffold(
-            //  appBar: AppBar(title: Text('Flutter layout demo')),
-            body: MainScreen()));
+      initialRoute: '/',
+      routes: {
+        '/': (context) => FirstScreen(),
+        '/second': (context) => SecondScreen()
+      },
+      title: 'Flutter Layout Demo',
+    );
   }
 }
