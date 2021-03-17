@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    title: 'returning data',
+    home: HomeScreen(),
+  ));
 }
 
 Widget _buildImage() => Hero(
@@ -81,6 +84,73 @@ class MyApp extends StatelessWidget {
         '/second': (context) => SecondScreen()
       },
       title: 'Flutter Layout Demo',
+    );
+  }
+}
+
+class SelectionButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () {
+          _navigateAndDisplaySelection(context);
+        },
+        child: Text('Pick an option, any option'));
+  }
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    final result = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SelectionScreen()));
+
+    Scaffold.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text("$result")));
+  }
+}
+
+class SelectionScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Selection screen'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'YES !');
+                  },
+                  child: Text('Yes !')),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'NO !');
+                  },
+                  child: Text('No !')),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Returning data demo'),
+      ),
+      body: Center(
+        child: SelectionButton(),
+      ),
     );
   }
 }
